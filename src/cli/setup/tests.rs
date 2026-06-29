@@ -1,5 +1,5 @@
 use super::*;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 
 const FAKE_HOOK: &str = "/fake/hook.sh";
 
@@ -160,12 +160,12 @@ fn snippet_claude_post_tool_use_maps_to_activity_log() {
 }
 
 #[test]
-fn snippet_codex_session_start_has_custom_matcher() {
+fn snippet_codex_session_start_uses_catch_all_matcher() {
     let v = build_agent_snippet("codex", FAKE_HOOK).unwrap();
     let entry = v
         .pointer("/hooks/SessionStart/0")
         .expect("codex SessionStart entry");
-    assert_eq!(entry.get("matcher"), Some(&json!("startup|resume")));
+    assert_eq!(entry.get("matcher"), Some(&json!("")));
     assert_eq!(
         entry
             .pointer("/hooks/0/command")
@@ -506,7 +506,7 @@ fn full_output_normalized_entry_shape() {
 
     let codex_ss = full.pointer("/agents/codex/hooks/0").unwrap();
     assert_eq!(codex_ss.get("trigger"), Some(&json!("SessionStart")));
-    assert_eq!(codex_ss.get("matcher"), Some(&json!("startup|resume")));
+    assert_eq!(codex_ss.get("matcher"), Some(&json!("")));
 }
 
 #[test]
@@ -836,7 +836,7 @@ const EXPECTED_FULL_OUTPUT: &str = r#"{
         {
           "command": "bash /fake/hook.sh codex session-start",
           "event": "session-start",
-          "matcher": "startup|resume",
+          "matcher": null,
           "trigger": "SessionStart"
         },
         {
@@ -879,7 +879,7 @@ const EXPECTED_FULL_OUTPUT: &str = r#"{
                   "type": "command"
                 }
               ],
-              "matcher": "startup|resume"
+              "matcher": ""
             }
           ],
           "Stop": [

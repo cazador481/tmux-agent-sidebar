@@ -2,7 +2,7 @@ use crate::event::{AgentEvent, AgentEventKind, EventAdapter};
 use crate::tmux::CODEX_AGENT;
 use serde_json::Value;
 
-use super::{HookRegistration, json_str, json_value_or_null, optional_str};
+use super::{json_str, json_value_or_null, optional_str, HookRegistration};
 
 pub struct CodexAdapter;
 
@@ -21,7 +21,7 @@ impl CodexAdapter {
     pub const HOOK_REGISTRATIONS: &'static [HookRegistration] = &[
         HookRegistration {
             trigger: "SessionStart",
-            matcher: Some("startup|resume"),
+            matcher: None,
             kind: AgentEventKind::SessionStart,
         },
         HookRegistration {
@@ -283,11 +283,9 @@ mod tests {
 
     #[test]
     fn permission_denied_not_supported() {
-        assert!(
-            CodexAdapter
-                .parse("permission-denied", &json!({}))
-                .is_none()
-        );
+        assert!(CodexAdapter
+            .parse("permission-denied", &json!({}))
+            .is_none());
     }
 
     #[test]
