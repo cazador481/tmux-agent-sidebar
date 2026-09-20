@@ -175,6 +175,10 @@ pub(super) fn handle_key_event(
     true
 }
 
+/// Returns whether a key event represents the portable help-popup shortcut.
+///
+/// Terminals may report `?` directly or as shifted `/`, so both forms are
+/// accepted.
 fn is_help_key(code: KeyCode, modifiers: KeyModifiers) -> bool {
     code == KeyCode::Char('?')
         || (code == KeyCode::Char('/') && modifiers.contains(KeyModifiers::SHIFT))

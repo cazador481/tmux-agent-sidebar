@@ -123,6 +123,7 @@ const HELP_ROWS: &[(&str, &str)] = &[
     ("Esc", "Return focus / close popup"),
 ];
 
+/// Renders the modal keybindings reference and records its clickable bounds.
 pub(super) fn render_help_popup(frame: &mut Frame, state: &mut AppState, area: Rect) {
     let theme = &state.theme;
     let key_width = HELP_ROWS

@@ -91,6 +91,8 @@ impl PopupState {
         }
     }
 
+    /// Records the rendered bounds for an open help popup so mouse input
+    /// can distinguish clicks inside the modal from outside clicks.
     pub fn set_help_area(&mut self, rect: Option<ratatui::layout::Rect>) {
         if let Self::Help { area } = self {
             *area = rect;
@@ -202,10 +204,12 @@ impl AppState {
 
     // ─── Help popup ──────────────────────────────────────────────────────
 
+    /// Reports whether the modal keybindings help popup is currently open.
     pub fn is_help_popup_open(&self) -> bool {
         matches!(self.popup, PopupState::Help { .. })
     }
 
+    /// Returns the last rendered bounds of the help popup, if it is open.
     pub fn help_popup_area(&self) -> Option<ratatui::layout::Rect> {
         match &self.popup {
             PopupState::Help { area } => *area,
@@ -213,6 +217,7 @@ impl AppState {
         }
     }
 
+    /// Opens the keybindings help popup, or closes it when it is already open.
     pub fn toggle_help_popup(&mut self) {
         if self.is_help_popup_open() {
             self.close_help_popup();
@@ -221,6 +226,7 @@ impl AppState {
         }
     }
 
+    /// Closes the help popup without affecting another active popup state.
     pub fn close_help_popup(&mut self) {
         if matches!(self.popup, PopupState::Help { .. }) {
             self.popup = PopupState::None;
